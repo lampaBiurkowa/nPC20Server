@@ -53,9 +53,13 @@ namespace CapsBallServer
             return rawData;
         }
 
-        public void Handle()
+        public bool TryHandle()
         {
+            if (Parameters.Count < handler.ParamsRequiredCount)
+                return false;
+
             handler.Handle(this);
+            return true;
         }
     }
 }

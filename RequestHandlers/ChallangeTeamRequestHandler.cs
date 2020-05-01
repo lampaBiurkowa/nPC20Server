@@ -1,6 +1,6 @@
 ﻿namespace CapsBallServer
 {
-    class CreateTeamRequestHandler : IRequestHandler
+    class ChallangeTeamRequestHandler : IRequestHandler
     {
         public int ParamsRequiredCount { get; } = 1;
 

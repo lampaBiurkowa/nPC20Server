@@ -25,7 +25,7 @@ namespace CapsBallServer
             if (checkIfFakeClient(requestPackage))
                 return;
 
-            requestPackage.Handle();
+            requestPackage.TryHandle();
         }
 
         static bool checkIfFakeClient(RequestPackage package)
