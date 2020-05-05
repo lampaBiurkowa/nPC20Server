@@ -1,19 +1,20 @@
-﻿using nDSSH;
+﻿using CapsBallShared;
+using nDSSH;
 using System.Collections.Generic;
 
 namespace CapsBallServer
 {
-    class ResponsePackage : CommandPackage
+    public class ResponsePackage : CommandPackage
     {
-        public ResponseResolver.Command Command { get; private set; }
+        public ResponseCommand Command { get; private set; }
 
-        public ResponsePackage(ResponseResolver.Command command, List<string> parameters)
+        public ResponsePackage(ResponseCommand command, List<string> parameters)
         {
             Command = command;
             Parameters = parameters;
         }
 
-        public ResponsePackage(ResponseResolver.Command command)
+        public ResponsePackage(ResponseCommand command)
         {
             Command = command;
         }
@@ -22,16 +23,13 @@ namespace CapsBallServer
         {
             string[] basicComponents = package.MessageContent.Split(COMMAND_SPLIT_CHAR);
 
-            Command = ResponseResolver.StringToCommand(basicComponents[0]);
-
-            string[] parameters = basicComponents[1].Split(PARAMETER_SPLIT_TEXT);
-            foreach (string parameter in parameters)
-                Parameters.Add(parameter);
+            Command = CommandsTranslator.StringToResponse(basicComponents[0]);
+            Parameters = new List<string>(basicComponents[1].Split(PARAMETER_SPLIT_TEXT));
         }
 
         public override string GetRawData()
         {
-            string rawData = ResponseResolver.CommandToString(Command) + COMMAND_SPLIT_CHAR;
+            string rawData = CommandsTranslator.ResponseToString(Command) + COMMAND_SPLIT_CHAR;
 
             for (int i = 0; i < Parameters.Count; i++)
             {

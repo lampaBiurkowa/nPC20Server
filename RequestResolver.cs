@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using CapsBallShared;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CapsBallServer
 {
@@ -9,24 +11,16 @@ namespace CapsBallServer
 
         static RequestResolver()
         {
-            resolver.Add(new CreateTeamRequestHandler(), "addforce");
+            resolver.Add(new ChallangeTeamRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.CHALLANGE_TEAM));
+            resolver.Add(new CreateTeamRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.CREATE_TEAM));
+            resolver.Add(new JoinGameRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.JOIN_GAME));
+            resolver.Add(new JoinTeamRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.JOIN_TEAM));
         }
 
-        public static string HadnlerToString(IRequestHandler handler)
-        {
-            if (resolver.ContainsKey(handler))
-                return resolver[handler];
+        public static string HandlerToString(IRequestHandler handler) =>
+            resolver.ContainsKey(handler) ? resolver[handler] : UNDEFINED_ID;
 
-            return UNDEFINED_ID;
-        }
-
-        public static IRequestHandler StringToHandler(string command)
-        {
-            foreach (KeyValuePair<IRequestHandler, string> pair in resolver)
-                if (pair.Value == command)
-                    return pair.Key;
-
-            return null; // :D
-        }
+        public static IRequestHandler StringToHandler(string command) =>
+            resolver.Where(p => p.Value == command).FirstOrDefault().Key;
     }
 }

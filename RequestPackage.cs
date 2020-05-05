@@ -1,6 +1,8 @@
 ﻿using nDSSH;
 using System.Collections.Generic;
 
+using CapsBallShared;
+
 namespace CapsBallServer
 {
     class RequestPackage : CommandPackage
@@ -38,7 +40,7 @@ namespace CapsBallServer
 
         public override string GetRawData()
         {
-            string rawData = Alias + COMMAND_SPLIT_CHAR + RequestResolver.HadnlerToString(handler) + COMMAND_SPLIT_CHAR;
+            string rawData = Alias + COMMAND_SPLIT_CHAR + RequestResolver.HandlerToString(handler) + COMMAND_SPLIT_CHAR;
 
             for (int i = 0; i < Parameters.Count; i++)
             {

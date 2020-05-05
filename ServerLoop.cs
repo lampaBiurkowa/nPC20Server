@@ -22,6 +22,7 @@ namespace CapsBallServer
         void onReceived(Package package)
         {
             RequestPackage requestPackage = new RequestPackage(package);
+            System.Console.WriteLine("HAAASD");
             if (checkIfFakeClient(requestPackage))
                 return;
 

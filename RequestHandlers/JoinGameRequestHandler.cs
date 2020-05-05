@@ -8,6 +8,7 @@ namespace CapsBallServer
 
         public void Handle(RequestPackage package)
         {
+            System.Console.WriteLine($"JEA {package.Alias}");
             IdResolver.AddUser(package.Alias, package.Id);
         }
     }

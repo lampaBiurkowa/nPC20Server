@@ -1,14 +1,15 @@
-﻿using CapsBallShared;
-using System;
+﻿using System;
 
 namespace CapsBallServer
 {
     class JoinedTeamEventArgs
     {
+        public string JoinerNick { get; private set; }
         public string TeamName { get; private set; }
 
-        public JoinedTeamEventArgs(string teamName)
+        public JoinedTeamEventArgs(string teamName, string joinerNick)
         {
+            JoinerNick = joinerNick;
             TeamName = teamName;
         }
     }
@@ -20,7 +21,10 @@ namespace CapsBallServer
         public int ParamsRequiredCount { get; } = 1;
         public void Handle(RequestPackage package)
         {
-            
+            string joinerNick = package.Alias;
+            string teamName = package.Parameters[0];
+
+            JoinedTeam?.Invoke(this, new JoinedTeamEventArgs(teamName, joinerNick));
         }
     }
 }
