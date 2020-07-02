@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace CapsBallServer
 {
+    #region howno
+    /*
     static class TeamsHandler
     {
         static TeamsCollector teamsCollector = new TeamsCollector();
@@ -45,44 +47,8 @@ namespace CapsBallServer
 
             ResponseCaller.ResponseChallange(challengedTeam.CaptainAlias, challengingTeamAlias);
         }
-        */
-        /*
-        static void onChallengeAnswered(string callingUserAlias, string challengedTeamAlias, string challengingTeamAlias, bool challangeAccepted)
-        {
-            if (!isCaptainOfTeam(callingUserAlias, teamsCollector.Completed))
-                return;
-
-            Team[] teamsConsidered = teamsCollector.Completed.ToArray();
-
-            Team challengedTeam = null;
-            Team challengingTeam = null;
-
-            for (int i = 0; i < teamsConsidered.Length; i++)
-            {
-                if (teamsConsidered[i].TeamAlias == challengedTeamAlias)
-                    challengedTeam = teamsConsidered[i];
-                else if (teamsConsidered[i].TeamAlias == challengingTeamAlias)
-                    challengingTeam = teamsConsidered[i];
-            }
-
-            if (challengedTeam == null || challengingTeam == null)
-                return; // :D/
-
-            ResponseCaller.ResponseChallengeAnswered(challangeAccepted, challengedTeam, challengingTeam);
-
-            if (challangeAccepted)
-                createMatchRoom(challengedTeam, challengingTeam);
-        }
-        */
-        /*static void createMatchRoom(Team challengedTeam, Team challengingTeam)
-        {
-            reassignTeams(challengedTeam, challengingTeam, teamsCollector);
-
-            MatchRoom room = new MatchRoom(challengedTeam, challengingTeam, "classic", 300, false); //joke only u know
-            ServerData.MatchRoomsHandler.MatchRooms.Add(room);
-        }*/
-
-        static void reassignTeams(Team challengedTeam, Team challengingTeam, TeamsCollector collection)
+    
+    static void reassignTeams(Team challengedTeam, Team challengingTeam, TeamsCollector collection)
         {
             collection.Completed.Remove(challengedTeam);
             collection.Completed.Remove(challengingTeam);
@@ -90,44 +56,6 @@ namespace CapsBallServer
             collection.Playing.Add(challengedTeam);
             collection.Playing.Add(challengingTeam);
         }
-
-        /*static void onGetPlayersJoined(string getterAlias, string teamAlias, ModeData.Mode mode)
-        {
-            TeamsCollector collectorConsidered = getAppropiateTeamsCollector(mode, getterAlias);
-            Team[] teamsConsidered = collectorConsidered.Uncompleted.ToArray();
-
-            foreach (Team team in teamsConsidered)
-                if (team.TeamAlias == teamAlias)
-                    sendAlreadyJoinedPlayers(getterAlias, team.Players);
-        }*/
-
-        /*
-        static void sendAlreadyJoinedPlayers(string playerAlias, List<Player> players)
-        {
-            List<string> userAliaes = new List<string>();
-            List<int> footballerTeamDBIds = new List<int>();
-
-            foreach (Player player in players)
-            {
-                userAliaes.Add(player.User.Alias);
-                footballerTeamDBIds.Add(player.Footballer.Data.Id);
-            }
-
-            ResponseCaller.ResponseSendAlreadyJoinedPlayers(playerAlias, userAliaes, footballerTeamDBIds);
-        }
-        */
-        /*static void onGetTeamInfo(string getterAlias, string teamAlias, TeamStates.State state, ModeData.Mode mode)
-        {
-            TeamsCollector collectorConsidered = getAppropiateTeamsCollector(mode, getterAlias);
-            Team[] teamsToSend = getAppropiateTeams(state, collectorConsidered);
-
-            foreach (Team team in teamsToSend)
-                if (team.TeamAlias == teamAlias)
-                {
-                    ResponseCaller.ResponseSendTeamInfo(getterAlias, team);
-                    return;
-                }
-        }*/
 
         static Team[] getAppropiateTeams(TeamStates.State state, TeamsCollector collector)
         {
@@ -170,14 +98,6 @@ namespace CapsBallServer
             }
         }
 
-        /*static void onReloadTeams(string senderAlias, TeamStates.State state, ModeData.Mode mode)
-        {
-            TeamsCollector teamsCollector = getAppropiateTeamsCollector(mode, senderAlias);
-            Team[] teamsToSend = getAppropiateTeams(state, teamsCollector);
-
-            foreach (Team team in teamsToSend)
-                ResponseCaller.ResponseSendTeamInfo(senderAlias, team);
-        }*/
 
         static void onTeamCreated(object sender, CreatedTeamEventArgs args)
         {
@@ -216,5 +136,33 @@ namespace CapsBallServer
 
             ResponseCaller.ResponseTeamData(team);
         }
+    }
+    */ 
+    #endregion
+
+    static class TeamsHandler
+    {
+        static Team blueTeam = new Team("B", 2);
+        static Team redTeam = new Team("R", 2);
+        static Player admin = null;
+
+        static TeamsHandler()
+        {
+            JoinTeamRequestHandler.JoinedTeam += onJoinedTeam;
+        }
+
+        static void onJoinedTeam(object sender, JoinedTeamEventArgs args)
+        {
+            Player joiner = new Player(DBReader.GetAccountByNick(args.JoinerNick).Result);
+            if (args.TeamName == blueTeam.Name)
+                blueTeam.AddPlayer(joiner);
+            else
+                redTeam.AddPlayer(joiner);
+
+            if (admin == null)
+                admin = joiner;
+        }
+
+        //TODO on player left
     }
 }

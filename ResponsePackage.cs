@@ -1,5 +1,6 @@
 ﻿using CapsBallShared;
 using nDSSH;
+using System;
 using System.Collections.Generic;
 
 namespace CapsBallServer
@@ -24,7 +25,7 @@ namespace CapsBallServer
             string[] basicComponents = package.MessageContent.Split(COMMAND_SPLIT_CHAR);
 
             Command = CommandsTranslator.StringToResponse(basicComponents[0]);
-            Parameters = new List<string>(basicComponents[1].Split(PARAMETER_SPLIT_TEXT));
+            Parameters = new List<string>(basicComponents[1].Split(new string[] { PARAMETER_SPLIT_TEXT }, StringSplitOptions.None));
         }
 
         public override string GetRawData()

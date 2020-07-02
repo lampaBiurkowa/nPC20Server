@@ -11,8 +11,6 @@ namespace CapsBallServer
 
         static RequestResolver()
         {
-            resolver.Add(new ChallangeTeamRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.CHALLANGE_TEAM));
-            resolver.Add(new CreateTeamRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.CREATE_TEAM));
             resolver.Add(new JoinGameRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.JOIN_GAME));
             resolver.Add(new JoinTeamRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.JOIN_TEAM));
         }
