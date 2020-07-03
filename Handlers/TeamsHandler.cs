@@ -1,6 +1,7 @@
 ﻿using CapsBallShared;
 using nDSSH;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CapsBallServer
 {
@@ -145,15 +146,19 @@ namespace CapsBallServer
         static Team blueTeam = new Team("B", 2);
         static Team redTeam = new Team("R", 2);
         static Player admin = null;
+        static List<Player> playersActive = new List<Player>();
 
-        static TeamsHandler()
+        public static void Initialize()
         {
             JoinTeamRequestHandler.JoinedTeam += onJoinedTeam;
+            ServerManager.ConnectionLost += onClientLeft;
         }
 
         static void onJoinedTeam(object sender, JoinedTeamEventArgs args)
         {
             Player joiner = new Player(DBReader.GetAccountByNick(args.JoinerNick).Result);
+            playersActive.Add(joiner);
+            System.Console.WriteLine($"{joiner.Account.Nick} joins { args.TeamName}");
             if (args.TeamName == blueTeam.Name)
                 blueTeam.AddPlayer(joiner);
             else
@@ -163,6 +168,15 @@ namespace CapsBallServer
                 admin = joiner;
         }
 
-        //TODO on player left
+        static void onClientLeft(string nick)
+        {
+            System.Console.WriteLine($"{nick} lifinwsdfs");
+            blueTeam.RemovePlayer(nick);
+            redTeam.RemovePlayer(nick);
+            if (admin.Account.Nick == nick)
+                admin = null;
+
+            playersActive.Remove(playersActive.Where(item => item.Account.Nick == nick).FirstOrDefault());
+        }
     }
 }

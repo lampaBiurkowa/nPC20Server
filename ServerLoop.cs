@@ -1,4 +1,5 @@
 ﻿using nDSSH;
+using System;
 
 namespace CapsBallServer
 {
@@ -17,19 +18,20 @@ namespace CapsBallServer
             Receiver.Received += onReceived;
             isRunning = true;
             ServerManager.Initialize(address, port);
+            TeamsHandler.Initialize();
         }
 
         void onReceived(Package package)
         {
             RequestPackage requestPackage = new RequestPackage(package);
-            System.Console.WriteLine("HAAASD");
+            System.Console.WriteLine($"HAAASD {package.MessageContent}");
             if (checkIfFakeClient(requestPackage))
                 return;
 
             requestPackage.TryHandle();
         }
 
-        static bool checkIfFakeClient(RequestPackage package)
+        bool checkIfFakeClient(RequestPackage package)
         {
             return false;
         }
