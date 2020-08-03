@@ -1,5 +1,6 @@
 ﻿using CapsBallShared;
 using nDSSH;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -141,12 +142,11 @@ namespace CapsBallServer
     */ 
     #endregion
 
-    static class TeamsHandler
+    public static class TeamsHandler
     {
-        static Team blueTeam = new Team("B", 2);
-        static Team redTeam = new Team("R", 2);
-        static Player admin = null;
-        static List<Player> playersActive = new List<Player>();
+        static Team blueTeam = new Team("B");
+        static Team redTeam = new Team("R");
+        //static List<Player> playersActive = new List<Player>();
 
         public static void Initialize()
         {
@@ -157,26 +157,44 @@ namespace CapsBallServer
         static void onJoinedTeam(object sender, JoinedTeamEventArgs args)
         {
             Player joiner = new Player(DBReader.GetAccountByNick(args.JoinerNick).Result);
-            playersActive.Add(joiner);
+            //playersActive.Add(joiner);
             System.Console.WriteLine($"{joiner.Account.Nick} joins { args.TeamName}");
+
             if (args.TeamName == blueTeam.Name)
                 blueTeam.AddPlayer(joiner);
             else
                 redTeam.AddPlayer(joiner);
 
-            if (admin == null)
-                admin = joiner;
+            if (!isAnyAdmin())
+            {
+                joiner.IsAdmin = true;
+                ResponseCaller.ResponseAdminAdded(joiner);
+                System.Console.WriteLine("kupadmin");
+            }
         }
+
+        static bool isAnyAdmin() => isAdminInTeam(blueTeam) || isAdminInTeam(redTeam);
+
+        static bool isAdminInTeam(Team team) => team.Players.Any(p => p.IsAdmin);
 
         static void onClientLeft(string nick)
         {
             System.Console.WriteLine($"{nick} lifinwsdfs");
             blueTeam.RemovePlayer(nick);
-            redTeam.RemovePlayer(nick);
-            if (admin.Account.Nick == nick)
-                admin = null;
-
-            playersActive.Remove(playersActive.Where(item => item.Account.Nick == nick).FirstOrDefault());
+            redTeam.RemovePlayer(nick); //TODO lack of admin
+            IdResolver.RemoveUser(nick);
+            //playersActive.Remove(playersActive.Where(item => item.Account.Nick == nick).FirstOrDefault());
         }
+
+        public static void Broadcast(ResponsePackage package)
+        {
+            broadcastToTeam(blueTeam, package);
+            System.Console.WriteLine(blueTeam.Players.Where(p => IdResolver.UserExists(p.Account.Nick)).ToList().Count);
+            broadcastToTeam(redTeam, package);
+            System.Console.WriteLine($"b {blueTeam.Players.Count} r{redTeam.Players.Count} {package.GetRawData()}");
+        }
+
+        static void broadcastToTeam(Team team, ResponsePackage package) =>
+            team.Players.Where(p => IdResolver.UserExists(p.Account.Nick)).ToList().ForEach(r => Sender.SendFeedbackByAlias(package.GetRawData(), r.Account.Nick));
     }
 }

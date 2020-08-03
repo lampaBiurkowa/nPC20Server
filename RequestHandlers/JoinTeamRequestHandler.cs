@@ -2,7 +2,7 @@
 
 namespace CapsBallServer
 {
-    class JoinedTeamEventArgs
+    public class JoinedTeamEventArgs
     {
         public string JoinerNick { get; private set; }
         public string TeamName { get; private set; }
@@ -14,7 +14,7 @@ namespace CapsBallServer
         }
     }
 
-    class JoinTeamRequestHandler : IRequestHandler
+    public class JoinTeamRequestHandler : IRequestHandler
     {
         public static event EventHandler<JoinedTeamEventArgs> JoinedTeam;
 

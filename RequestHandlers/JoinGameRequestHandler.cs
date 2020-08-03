@@ -2,7 +2,7 @@
 
 namespace CapsBallServer
 {
-    class JoinGameRequestHandler : IRequestHandler
+    public class JoinGameRequestHandler : IRequestHandler
     {
         public int ParamsRequiredCount { get; } = 0;
 

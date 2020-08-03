@@ -6,12 +6,14 @@ namespace CapsBallServer
 {
     public static class ResponseCaller
     {
+        public static void ResponseAdminAdded(Player player) =>
+            TeamsHandler.Broadcast(new ResponsePackage(ResponseCommand.ADMIN_ADDED));
+
         public static void ResponseTeamData(Team team)
         {
             List<string> parameters = new List<string>();
             parameters.Add(team.Name);
             parameters.Add(team.GetCount().ToString());
-            parameters.Add(team.TargetCount.ToString());
             List<Player> players = team.GetPlayers();
             foreach (Player p in players)
                 parameters.Add(p.Account.Nick);
@@ -20,13 +22,10 @@ namespace CapsBallServer
             //broadcastToTeam(team, package);
         }
 
-        static void broadcastToTeam(Team team, ResponsePackage package)
+        public static void ResponseGameStarted()
         {
-            List<Player> players = team.GetPlayers();
-            for (int i = 0; i < players.Count; i++)
-                if (IdResolver.UserExists(players[i].Account.Nick))
-                    Sender.SendFeedbackByAlias(package.GetRawData(), players[i].Account.Nick);
+            ResponsePackage package = new ResponsePackage(ResponseCommand.GAME_STARTED);
+            TeamsHandler.Broadcast(package);
         }
-
     }
 }
