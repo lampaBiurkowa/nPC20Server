@@ -22,9 +22,10 @@ namespace CapsBallServer
             //broadcastToTeam(team, package);
         }
 
-        public static void ResponseGameStarted()
+        public static void ResponseGameStarted(string starterNick)
         {
-            ResponsePackage package = new ResponsePackage(ResponseCommand.GAME_STARTED);
+            List<string> parameters = new List<string>(new string[] { starterNick });
+            ResponsePackage package = new ResponsePackage(ResponseCommand.GAME_STARTED, parameters);
             TeamsHandler.Broadcast(package);
         }
     }

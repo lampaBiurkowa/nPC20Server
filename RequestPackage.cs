@@ -33,14 +33,10 @@ namespace CapsBallServer
             handler = RequestResolver.StringToHandler(basicComponents[0]);
             Id = package.ClientData.Id;
             
-            if (components.Length == 1)
+            if (basicComponents.Length == 1)
                 Parameters = new List<string>();
             else
-                Parameters = new List<string>(components[1].Split(new string[] { PARAMETER_SPLIT_TEXT }, System.StringSplitOptions.None));
-        
-            string[] parameters = basicComponents[1].Split(new string[] { PARAMETER_SPLIT_TEXT }, StringSplitOptions.None);
-            foreach (string parameter in parameters)
-                Parameters.Add(parameter);
+                Parameters = new List<string>(basicComponents[1].Split(new string[] { PARAMETER_SPLIT_TEXT }, StringSplitOptions.None));
         }
 
         public override string GetRawData()

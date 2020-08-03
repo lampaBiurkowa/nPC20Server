@@ -151,6 +151,7 @@ namespace CapsBallServer
         public static void Initialize()
         {
             JoinTeamRequestHandler.JoinedTeam += onJoinedTeam;
+            StartGameRequestHandler.GameStarted += onGameStarted;
             ServerManager.ConnectionLost += onClientLeft;
         }
 
@@ -177,11 +178,24 @@ namespace CapsBallServer
 
         static bool isAdminInTeam(Team team) => team.Players.Any(p => p.IsAdmin);
 
+        static void onGameStarted(object sender, StartGameEventArgs args)
+        {
+            if (!isAdminInTeams(args.StarterNick))
+                return;
+
+            ResponseCaller.ResponseGameStarted(args.StarterNick);
+        }
+
+        static bool isAdminInTeams(string nick) => isAdminInTeam(nick, blueTeam) || isAdminInTeam(nick, redTeam);
+        static bool isAdminInTeam(string nick, Team team) => team.Players.Any(p => p.IsAdmin && p.Account.Nick == nick);
+
         static void onClientLeft(string nick)
         {
             System.Console.WriteLine($"{nick} lifinwsdfs");
+            if (isAdminInTeams(nick));
+
             blueTeam.RemovePlayer(nick);
-            redTeam.RemovePlayer(nick); //TODO lack of admin
+            redTeam.RemovePlayer(nick);
             IdResolver.RemoveUser(nick);
             //playersActive.Remove(playersActive.Where(item => item.Account.Nick == nick).FirstOrDefault());
         }
