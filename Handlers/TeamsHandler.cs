@@ -144,8 +144,8 @@ namespace CapsBallServer
 
     public static class TeamsHandler
     {
-        static Team blueTeam = new Team("B");
-        static Team redTeam = new Team("R");
+        static Team blueTeam = new Team(TeamType.BLUE, "B");
+        static Team redTeam = new Team(TeamType.RED, "R");
         //static List<Player> playersActive = new List<Player>();
 
         public static void Initialize()
@@ -159,12 +159,11 @@ namespace CapsBallServer
         {
             Player joiner = new Player(DBReader.GetAccountByNick(args.JoinerNick).Result);
             //playersActive.Add(joiner);
-            System.Console.WriteLine($"{joiner.Account.Nick} joins { args.TeamName}");
+            System.Console.WriteLine($"{joiner.Account.Nick} joins { args.TeamType}");
 
-            if (args.TeamName == blueTeam.Name)
-                blueTeam.AddPlayer(joiner);
-            else
-                redTeam.AddPlayer(joiner);
+            Team teamConsidered = args.TeamType == blueTeam.TeamType ? blueTeam : redTeam;
+            teamConsidered.AddPlayer(joiner);
+            ResponseCaller.ResponseTeamData(joiner.Account.Nick, teamConsidered);
 
             if (!isAnyAdmin())
             {

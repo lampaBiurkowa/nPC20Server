@@ -1,16 +1,17 @@
-﻿using System;
+﻿using CapsBallShared;
+using System;
 
 namespace CapsBallServer
 {
     public class JoinedTeamEventArgs
     {
         public string JoinerNick { get; private set; }
-        public string TeamName { get; private set; }
+        public TeamType TeamType { get; private set; }
 
-        public JoinedTeamEventArgs(string teamName, string joinerNick)
+        public JoinedTeamEventArgs(TeamType teamType, string joinerNick)
         {
             JoinerNick = joinerNick;
-            TeamName = teamName;
+            TeamType = teamType;
         }
     }
 
@@ -22,9 +23,9 @@ namespace CapsBallServer
         public void Handle(RequestPackage package)
         {
             string joinerNick = package.Alias;
-            string teamName = package.Parameters[0];
+            TeamType teamType = (TeamType)Enum.Parse(typeof(TeamType), package.Parameters[0]);
 
-            JoinedTeam?.Invoke(this, new JoinedTeamEventArgs(teamName, joinerNick));
+            JoinedTeam?.Invoke(this, new JoinedTeamEventArgs(teamType, joinerNick));
         }
     }
 }
