@@ -1,8 +1,8 @@
 ﻿using CapsBallShared;
+using GeoLib;
 using nDSSH;
 using System.Collections.Generic;
-using System.IO;
-using System.Xml.Serialization;
+using System.Text.Json;
 
 namespace CapsBallServer
 {
@@ -17,16 +17,11 @@ namespace CapsBallServer
             parameters.Add(team.TeamType.ToString());
             parameters.Add(team.Name);
             parameters.Add(team.GetCount().ToString());
-            List<Player> players = team.GetPlayers();
-            XmlSerializer serializer = new XmlSerializer(typeof(Player));
-            foreach (Player p in players)
-            {
-                StringWriter stringWriter = new StringWriter();
-                serializer.Serialize(stringWriter, p);
-                parameters.Add(stringWriter.ToString());
-            }
+            foreach (Player p in team.GetPlayers())
+                parameters.Add(JsonSerializer.Serialize(p));
 
             ResponsePackage package = new ResponsePackage(ResponseCommand.GET_TEAM, parameters);
+            TeamsHandler.Broadcast(package);
         }
 
         public static void ResponseGameStarted(string starterNick)
@@ -36,11 +31,25 @@ namespace CapsBallServer
             TeamsHandler.Broadcast(package);
         }
 
-        public static void ResponseJoinedTeam(string joinerNick, TeamType teamType)
+        public static void ResponseJoinedTeam(Player player, TeamType teamType)
         {
-            List<string> parameters = new List<string>(new string[] { joinerNick, teamType.ToString() });
+            List<string> parameters = new List<string>(new string[] { JsonSerializer.Serialize(player), teamType.ToString() });
             ResponsePackage package = new ResponsePackage(ResponseCommand.JOINED_TEAM, parameters);
             TeamsHandler.Broadcast(package);
+        }
+
+        public static void RequestSendFootballerData(string playerNick, Vector2 position, Vector2 velocity)
+        {
+            List<string> parameters = new List<string>(new string[] { playerNick, position.X.ToString(), position.Y.ToString(), velocity.X.ToString(), velocity.Y.ToString() });
+            ResponsePackage package = new ResponsePackage(ResponseCommand.SEND_FOOTBALLER, parameters);
+            TeamsHandler.Broadcast(package);
+        }
+
+        public static void RequestSendGameState(string playerNick)
+        {
+            List<string> parameters = new List<string>(new string[] { JsonSerializer.Serialize(TeamsHandler.GameState) });
+            ResponsePackage package = new ResponsePackage(ResponseCommand.SEND_GAME_STATE, parameters);
+            Sender.SendFeedbackByAlias(package.GetRawData(), playerNick);
         }
     }
 }

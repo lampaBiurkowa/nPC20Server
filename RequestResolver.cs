@@ -14,6 +14,7 @@ namespace CapsBallServer
             resolver.Add(new JoinGameRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.JOIN_GAME));
             resolver.Add(new JoinTeamRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.JOIN_TEAM));
             resolver.Add(new StartGameRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.START_GAME));
+            resolver.Add(new SendFootballerRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.SEND_FOOTBALER));
         }
 
         public static string HandlerToString(IRequestHandler handler) =>

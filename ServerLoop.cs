@@ -24,7 +24,7 @@ namespace CapsBallServer
         void onReceived(Package package)
         {
             RequestPackage requestPackage = new RequestPackage(package);
-            System.Console.WriteLine($"HAAASD {package.MessageContent}");
+            System.Console.WriteLine($"risiwd {package.MessageContent}");
             if (checkIfFakeClient(requestPackage))
                 return;
 

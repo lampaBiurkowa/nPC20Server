@@ -17,6 +17,7 @@ namespace CapsBallServer
         public void Handle(RequestPackage package)
         {
             string starterNick = package.Alias;
+            TeamsHandler.GameState.GameStarted = true;
             GameStarted?.Invoke(this, new StartGameEventArgs(starterNick));
         }
     }
