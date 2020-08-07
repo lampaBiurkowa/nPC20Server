@@ -38,14 +38,14 @@ namespace CapsBallServer
             TeamsHandler.Broadcast(package);
         }
 
-        public static void RequestSendFootballerData(string playerNick, Vector2 position, Vector2 velocity)
+        public static void ResponseSendFootballerData(string playerNick, Vector2 position, Vector2 velocity)
         {
             List<string> parameters = new List<string>(new string[] { playerNick, position.X.ToString(), position.Y.ToString(), velocity.X.ToString(), velocity.Y.ToString() });
             ResponsePackage package = new ResponsePackage(ResponseCommand.SEND_FOOTBALLER, parameters);
             TeamsHandler.Broadcast(package);
         }
 
-        public static void RequestSendGameState(string playerNick)
+        public static void ResponseSendGameState(string playerNick)
         {
             List<string> parameters = new List<string>(new string[] { JsonSerializer.Serialize(TeamsHandler.GameState) });
             ResponsePackage package = new ResponsePackage(ResponseCommand.SEND_GAME_STATE, parameters);

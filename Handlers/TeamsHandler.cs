@@ -27,6 +27,7 @@ namespace CapsBallServer
             teamConsidered.AddPlayer(joiner);
             ResponseCaller.ResponseTeamData(joiner.PublicAccount.Nick, teamConsidered);
             ResponseCaller.ResponseJoinedTeam(joiner, teamConsidered.TeamType);
+            ResponseCaller.ResponseSendGameState(joiner.PublicAccount.Nick);
 
             if (!isAnyAdmin())
             {

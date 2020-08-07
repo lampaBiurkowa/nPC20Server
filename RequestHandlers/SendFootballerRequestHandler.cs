@@ -32,7 +32,7 @@ namespace CapsBallServer
             Vector2 velocity = new Vector2(float.Parse(package.Parameters[2]), float.Parse(package.Parameters[3]));
 
             FootballerSent?.Invoke(this, new SendFootballerEventArgs(playerNick, position, velocity));
-            ResponseCaller.RequestSendFootballerData(playerNick, position, velocity);
+            ResponseCaller.ResponseSendFootballerData(playerNick, position, velocity);
         }
     }
 }

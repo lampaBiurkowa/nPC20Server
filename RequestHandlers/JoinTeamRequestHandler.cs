@@ -24,7 +24,6 @@ namespace CapsBallServer
         {
             string joinerNick = package.Alias;
             TeamType teamType = (TeamType)Enum.Parse(typeof(TeamType), package.Parameters[0]);
-            ResponseCaller.RequestSendGameState(joinerNick);
             JoinedTeam?.Invoke(this, new JoinedTeamEventArgs(teamType, joinerNick));
         }
     }
