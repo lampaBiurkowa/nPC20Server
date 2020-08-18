@@ -38,9 +38,9 @@ namespace CapsBallServer
             TeamsHandler.Broadcast(package);
         }
 
-        public static void ResponseSendFootballerData(string playerNick, Vector2 position, Vector2 velocity)
+        public static void ResponseSendFootballerData(string playerNick, Vector2 position, float rotation, Vector2 velocity)
         {
-            List<string> parameters = new List<string>(new string[] { playerNick, position.X.ToString(), position.Y.ToString(), velocity.X.ToString(), velocity.Y.ToString() });
+            List<string> parameters = new List<string>(new string[] { playerNick, position.X.ToString(), position.Y.ToString(), rotation.ToString(), velocity.X.ToString(), velocity.Y.ToString() });
             ResponsePackage package = new ResponsePackage(ResponseCommand.SEND_FOOTBALLER, parameters);
             TeamsHandler.Broadcast(package);
         }
