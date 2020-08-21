@@ -24,6 +24,13 @@ namespace CapsBallServer
             TeamsHandler.Broadcast(package);
         }
 
+        public static void ResponseBonusAdded(BonusType bonusType, Vector2 position)
+        {
+            List<string> parameters = new List<string>(new string[] { bonusType.ToString(), position.X.ToString(), position.Y.ToString() });
+            ResponsePackage package = new ResponsePackage(ResponseCommand.BONUS_ADDED, parameters);
+            TeamsHandler.Broadcast(package);
+        }
+
         public static void ResponseGameStarted(string starterNick)
         {
             List<string> parameters = new List<string>(new string[] { starterNick });
@@ -47,7 +54,7 @@ namespace CapsBallServer
 
         public static void ResponseSendGameState(string playerNick)
         {
-            List<string> parameters = new List<string>(new string[] { JsonSerializer.Serialize(TeamsHandler.GameState) });
+            List<string> parameters = new List<string>(new string[] { JsonSerializer.Serialize(CachedData.GameState) });
             ResponsePackage package = new ResponsePackage(ResponseCommand.SEND_GAME_STATE, parameters);
             Sender.SendFeedbackByAlias(package.GetRawData(), playerNick);
         }

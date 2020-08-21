@@ -6,8 +6,6 @@ namespace CapsBallServer
 {
     public static class TeamsHandler
     {
-        public static GameState GameState = new GameState();
-
         static Team blueTeam = new Team(TeamType.BLUE, "B");
         static Team redTeam = new Team(TeamType.RED, "R");
 
@@ -21,7 +19,6 @@ namespace CapsBallServer
         static void onJoinedTeam(object sender, JoinedTeamEventArgs args)
         {
             Player joiner = new Player(DBReader.GetPublicAccount(DBReader.GetAccountByNick(args.JoinerNick).Result.Id).Result); // :D/ 
-            System.Console.WriteLine($"{joiner.PublicAccount.Nick} joins { args.TeamType}");
 
             Team teamConsidered = args.TeamType == blueTeam.TeamType ? blueTeam : redTeam;
             teamConsidered.AddPlayer(joiner);
@@ -53,7 +50,6 @@ namespace CapsBallServer
 
         static void onClientLeft(string nick)
         {
-            System.Console.WriteLine($"{nick} lifinwsdfs");
             if (!isAdminInTeams(nick));//
 
             blueTeam.RemovePlayer(nick);
