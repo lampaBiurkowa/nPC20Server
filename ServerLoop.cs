@@ -39,7 +39,10 @@ namespace CapsBallServer
         void handle()
         {
             while (isRunning)
+            {
                 ServerManager.Update();
+                BonusHandler.Update();
+            }
         }
     }
 }

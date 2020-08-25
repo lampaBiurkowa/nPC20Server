@@ -43,6 +43,7 @@ namespace CapsBallServer
                 return;
 
             ResponseCaller.ResponseGameStarted(args.StarterNick);
+            BonusHandler.Initialize();
         }
 
         static bool isAdminInTeams(string nick) => isAdminInTeam(nick, blueTeam) || isAdminInTeam(nick, redTeam);

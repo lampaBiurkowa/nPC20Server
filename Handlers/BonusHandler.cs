@@ -1,33 +1,41 @@
 ﻿using CapsBallShared;
 using GeoLib;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace CapsBallServer
 {
     public static class BonusHandler
     {
-        public static void RunBonusLoop()
-        {
-            Random random = new Random();
-            int bonusesTotalCount = Enum.GetValues(typeof(BonusType)).Length;
-            while (true) // B) /
-            {
-                for (int i = 0; i < CachedData.StadiumCoreData.BonusesCount; i++)
-                {
-                    BonusType bonus = (BonusType)random.Next(0, bonusesTotalCount);
-                    Vector2 position = getValidPosition();
-                    ResponseCaller.ResponseBonusAdded(bonus, position);
-                }
+        public static bool Started { get; set; } = false;
+        public static int BonusesTotalCount { get; set; }
 
-                Task.Delay(CachedData.StadiumCoreData.BonusChangeSeconds * 1000);
+        static Random random = new Random();
+        static Stopwatch timer = new Stopwatch();
+
+        public static void Initialize()
+        {
+            BonusesTotalCount = Enum.GetValues(typeof(BonusType)).Length;
+            Started = true;
+            timer.Start();
+        }
+
+        public static void Update()
+        {
+            if (!Started || timer.Elapsed.Seconds < CachedData.StadiumCoreData.BonusChangeSeconds)
+                return;
+
+            for (int i = 0; i < CachedData.StadiumCoreData.BonusesCount; i++)
+            {
+                BonusType bonus = (BonusType)random.Next(0, BonusesTotalCount);
+                Vector2 position = getValidPosition();
+                ResponseCaller.ResponseBonusAdded(bonus, position);
             }
+            timer.Restart();
         }
 
         static Vector2 getValidPosition()
         {
-            Random random = new Random();
             Vector2 result = new Vector2();
             bool positionCorrect = false;
             while (!positionCorrect)
@@ -36,7 +44,7 @@ namespace CapsBallServer
                 int y = random.Next(0, CachedData.StadiumCoreData.Height);
                 result = new Vector2(x, y);
                 positionCorrect = true;
-                foreach (ShapeStruct item in CachedData.StadiumCoreData.Items)
+                foreach (ShapeStruct item in CachedData.StadiumCoreData.GetItems())
                 {
                     if (item.ContainsPoint(result))
                     {
