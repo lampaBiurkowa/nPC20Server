@@ -46,7 +46,7 @@ namespace CapsBallServer
                 positionCorrect = true;
                 foreach (ShapeStruct item in CachedData.StadiumCoreData.GetItems())
                 {
-                    if (item.ContainsPoint(result))
+                    if (item.ContainsCirc(new CircStruct(result, SharedConstants.BONUS_RADIUS)))
                     {
                         positionCorrect = false;
                         break;

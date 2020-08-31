@@ -1,24 +1,24 @@
-﻿
-
-using GeoLib;
+﻿using GeoLib;
 using System;
-using System.Globalization;
 
 namespace CapsBallServer
 {
     public class SendFootballerEventArgs
     {
+        public bool Invisible { get; private set; }
         public string PlayerNick { get; private set; }
         public Vector2 Position { get; private set; }
         public float Rotation { get; private set; }
         public Vector2 Velocity { get; private set; }
+        public bool WallBreaker { get; private set; }
 
-        public SendFootballerEventArgs(string playerNick, Vector2 position, float rotation, Vector2 velocity)
+        public SendFootballerEventArgs(string playerNick, Vector2 position, float rotation, Vector2 velocity, bool invisible, bool wallBreaker)
         {
             PlayerNick = playerNick;
             Position = position;
             Rotation = rotation;
             Velocity = velocity;
+            Invisible = invisible;
         }
     }
 
@@ -26,16 +26,18 @@ namespace CapsBallServer
     {
         public static event EventHandler<SendFootballerEventArgs> FootballerSent;
 
-        public int ParamsRequiredCount { get; } = 5;
+        public int ParamsRequiredCount { get; } = 7;
         public void Handle(RequestPackage package)
         {
             string playerNick = package.Alias;
             Vector2 position = new Vector2(float.Parse(package.Parameters[0]), float.Parse(package.Parameters[1]));
             float rotation = float.Parse(package.Parameters[2]);
             Vector2 velocity = new Vector2(float.Parse(package.Parameters[3]), float.Parse(package.Parameters[4]));
+            bool invisible = bool.Parse(package.Parameters[5]);
+            bool wallBreaker = bool.Parse(package.Parameters[6]);
 
-            FootballerSent?.Invoke(this, new SendFootballerEventArgs(playerNick, position, rotation, velocity));
-            ResponseCaller.ResponseSendFootballerData(playerNick, position, rotation, velocity);
+            FootballerSent?.Invoke(this, new SendFootballerEventArgs(playerNick, position, rotation, velocity, invisible, wallBreaker));
+            ResponseCaller.ResponseSendFootballerData(playerNick, position, rotation, velocity, invisible, wallBreaker);
         }
     }
 }
