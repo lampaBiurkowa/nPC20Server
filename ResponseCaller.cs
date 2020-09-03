@@ -45,10 +45,10 @@ namespace CapsBallServer
             TeamsHandler.Broadcast(package);
         }
 
-        public static void ResponseSendFootballerData(string playerNick, Vector2 position, float rotation, Vector2 velocity, bool invisible, bool wallBreaker)
+        public static void ResponseSendFootballerState(FootballerState footballerState)
         {
-            List<string> parameters = new List<string>(new string[] { playerNick, position.X.ToString(), position.Y.ToString(), rotation.ToString(), velocity.X.ToString(), velocity.Y.ToString(), invisible.ToString(), wallBreaker.ToString() });
-            ResponsePackage package = new ResponsePackage(ResponseCommand.SEND_FOOTBALLER, parameters);
+            List<string> parameters = new List<string>(new string[] { JsonSerializer.Serialize(footballerState) });
+            ResponsePackage package = new ResponsePackage(ResponseCommand.SEND_FOOTBALLER_STATE, parameters);
             TeamsHandler.Broadcast(package);
         }
 
@@ -57,6 +57,13 @@ namespace CapsBallServer
             List<string> parameters = new List<string>(new string[] { JsonSerializer.Serialize(CachedData.GameState) });
             ResponsePackage package = new ResponsePackage(ResponseCommand.SEND_GAME_STATE, parameters);
             Sender.SendFeedbackByAlias(package.GetRawData(), playerNick);
+        }
+
+        public static void ResponseImpulseApplied(string nick, Vector2 impulse)
+        {
+            List<string> parameters = new List<string>(new string[] { nick, impulse.X.ToString(), impulse.Y.ToString() });
+            ResponsePackage package = new ResponsePackage(ResponseCommand.IMPULSE_APPLIED, parameters);
+            TeamsHandler.Broadcast(package);
         }
     }
 }

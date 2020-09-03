@@ -6,16 +6,16 @@ namespace CapsBallServer
 {
     static class RequestResolver
     {
-        static Dictionary<IRequestHandler, string> resolver = new Dictionary<IRequestHandler, string>();
         const string UNDEFINED_ID = "undefined";
 
-        static RequestResolver()
+        static Dictionary<IRequestHandler, string> resolver = new Dictionary<IRequestHandler, string>
         {
-            resolver.Add(new JoinGameRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.JOIN_GAME));
-            resolver.Add(new JoinTeamRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.JOIN_TEAM));
-            resolver.Add(new StartGameRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.START_GAME));
-            resolver.Add(new SendFootballerRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.SEND_FOOTBALER));
-        }
+            { new ApplyImpulseRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.APPLY_IMPULSE) },
+            { new JoinGameRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.JOIN_GAME) },
+            { new JoinTeamRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.JOIN_TEAM) },
+            { new StartGameRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.START_GAME) },
+            { new SendFootballerRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.SEND_FOOTBALLER_STATE) }
+        };
 
         public static string HandlerToString(IRequestHandler handler) =>
             resolver.ContainsKey(handler) ? resolver[handler] : UNDEFINED_ID;
