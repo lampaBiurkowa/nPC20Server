@@ -45,6 +45,13 @@ namespace CapsBallServer
             TeamsHandler.Broadcast(package);
         }
 
+        public static void ResponseSendBallState(BallState ballState)
+        {
+            List<string> parameters = new List<string>(new string[] { JsonSerializer.Serialize(ballState) });
+            ResponsePackage package = new ResponsePackage(ResponseCommand.SEND_BALL_STATE, parameters);
+            TeamsHandler.Broadcast(package);
+        }
+
         public static void ResponseSendFootballerState(FootballerState footballerState)
         {
             List<string> parameters = new List<string>(new string[] { JsonSerializer.Serialize(footballerState) });
