@@ -31,6 +31,13 @@ namespace CapsBallServer
             TeamsHandler.Broadcast(package);
         }
 
+        public static void ResponseBulletTriggered(BulletState bulletState)
+        {
+            List<string> parameters = new List<string>(new string[] { JsonSerializer.Serialize(bulletState) });
+            ResponsePackage package = new ResponsePackage(ResponseCommand.BULLET_TRIGGERED, parameters);
+            TeamsHandler.Broadcast(package);
+        }
+
         public static void ResponseGameStarted(string starterNick)
         {
             List<string> parameters = new List<string>(new string[] { starterNick });
@@ -45,7 +52,7 @@ namespace CapsBallServer
             TeamsHandler.Broadcast(package);
         }
 
-        public static void ResponseSendBallState(BallState ballState)
+        public static void ResponseSendBallState(MovementState ballState)
         {
             List<string> parameters = new List<string>(new string[] { JsonSerializer.Serialize(ballState) });
             ResponsePackage package = new ResponsePackage(ResponseCommand.SEND_BALL_STATE, parameters);

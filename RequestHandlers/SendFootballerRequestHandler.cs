@@ -4,7 +4,7 @@ using System;
 
 namespace CapsBallServer
 {
-    public class SendFootballerRequestHandler : IRequestHandler
+    public class SendFootballerStateRequestHandler : IRequestHandler
     {
         public static event EventHandler<FootballerState> FootballerSent;
 

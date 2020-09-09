@@ -11,10 +11,12 @@ namespace CapsBallServer
         static Dictionary<IRequestHandler, string> resolver = new Dictionary<IRequestHandler, string>
         {
             { new ApplyImpulseRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.APPLY_IMPULSE) },
+            { new BulletTriggeredRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.BULLET_TRIGGERED) },
             { new JoinGameRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.JOIN_GAME) },
             { new JoinTeamRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.JOIN_TEAM) },
             { new StartGameRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.START_GAME) },
-            { new SendFootballerRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.SEND_FOOTBALLER_STATE) }
+            { new SendBallStateRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.SEND_BALL_STATE) },
+            { new SendFootballerStateRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.SEND_FOOTBALLER_STATE) }
         };
 
         public static string HandlerToString(IRequestHandler handler) =>
