@@ -16,6 +16,7 @@ namespace CapsBallServer
             { new JoinTeamRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.JOIN_TEAM) },
             { new StartGameRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.START_GAME) },
             { new SendBallStateRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.SEND_BALL_STATE) },
+            { new SendGameStateRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.SEND_GAME_STATE) },
             { new SendFootballerStateRequestHandler(), CommandsTranslator.RequestToString(RequestCommand.SEND_FOOTBALLER_STATE) }
         };
 

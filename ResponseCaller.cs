@@ -73,6 +73,13 @@ namespace CapsBallServer
             Sender.SendFeedbackByAlias(package.GetRawData(), playerNick);
         }
 
+        public static void ResponseSendGameState()
+        {
+            List<string> parameters = new List<string>(new string[] { JsonSerializer.Serialize(CachedData.GameState) });
+            ResponsePackage package = new ResponsePackage(ResponseCommand.SEND_GAME_STATE, parameters);
+            TeamsHandler.Broadcast(package);
+        }
+
         public static void ResponseImpulseApplied(string nick, Vector2 impulse)
         {
             List<string> parameters = new List<string>(new string[] { nick, impulse.X.ToString(), impulse.Y.ToString() });
