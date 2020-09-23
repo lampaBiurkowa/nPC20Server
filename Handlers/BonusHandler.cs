@@ -29,7 +29,7 @@ namespace CapsBallServer
             {
                 BonusType bonus = (BonusType)random.Next(0, BonusesTotalCount);
                 Vector2 position = getValidPosition();
-                ResponseCaller.ResponseBonusAdded(bonus, position);
+                ResponseCaller.ResponseBonusAdded(new BonusItemData(bonus, position));
             }
             timer.Restart();
         }
